@@ -4,7 +4,7 @@ module Qif
   class DateFormat
     attr_reader :format
     
-    def initialize(format = 'dd/mm/yyyy')
+    def initialize(format = 'dd.mm.yyyy')
       @format = format
     end
     
@@ -50,8 +50,8 @@ module Qif
     
     def convert_format_to_regex
       format = @format.dup
-      format.gsub!('dd', '([0-3][0-9])')
-      format.gsub!('mm', '([0-1][0-9])')
+      format.gsub!('dd', '([0-3 ]?[0-9])')
+      format.gsub!('mm', '([0-1 ]?[0-9])')
       format.gsub!('yyyy', '([1-2][0-9]{3})')
       format.gsub!('yy', '([0-9]{2})')
       

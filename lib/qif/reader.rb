@@ -8,7 +8,7 @@ module Qif
   #
   # Usage:
   #
-  #   reader = Qif::Reader.new(open('/path/to/qif'), 'dd/mm/yyyy')
+  #   reader = Qif::Reader.new(open('/path/to/qif'), 'dd.mm.yyyy')
   #   reader.each do |transaction|
   #     puts transaction.date.strftime('%d/%m/%Y')
   #     puts transaction.amount.to_s
@@ -36,7 +36,7 @@ module Qif
     # if guessing method fails.
     def initialize(data, format = nil)
       @data = data.respond_to?(:read) ? data : StringIO.new(data.to_s)
-      @format = DateFormat.new(format || guess_date_format || 'dd/mm/yyyy')
+      @format = DateFormat.new(format || guess_date_format || 'dd.mm.yyyy')
       read_header
       raise(UnrecognizedData, "Provided data doesn't seems to represent a QIF file") unless @header
       raise(UnknownAccountType, "Unknown account type. Should be one of followings :\n#{SUPPORTED_ACCOUNTS.keys.inspect}") unless SUPPORTED_ACCOUNTS.keys.collect(&:downcase).include? @header.downcase
@@ -80,8 +80,8 @@ module Qif
         break if line.nil?
         date = line.strip.scan(/^D(\d{1,2}).(\d{1,2}).(\d{2,4})/).flatten
         if date.count == 3 
-          guessed_format = date[0].to_i.between?(1, 12) ? (date[1].to_i.between?(1, 12) ? nil : 'mm/dd') : 'dd/mm'
-          guessed_format += '/' + 'y'*date[2].length if guessed_format
+          guessed_format = date[0].to_i.between?(1, 12) ? (date[1].to_i.between?(1, 12) ? nil : 'mm.dd') : 'dd.mm'
+          guessed_format += '.' + 'y'*date[2].length if guessed_format
         end
       end until guessed_format
       @data.rewind
