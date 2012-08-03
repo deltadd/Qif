@@ -125,6 +125,7 @@ module Qif
       headers = []
       begin
         line = @data.readline.strip
+        redo if line.empty?
         headers << line.strip if line =~ /^!/
       end until line !~ /^!/
 

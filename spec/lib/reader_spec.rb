@@ -85,6 +85,11 @@ describe Qif::Reader do
      @instance.size.should == 3
    end
 
+   it 'should initialize if empty lines at the beginning' do
+     @instance = Qif::Reader.new(open('spec/fixtures/3_records_ddmmyy_empty_lines.qif'))
+     @instance.size.should == 3
+   end
+
   it 'should should parse amounts with comma separator too' do
     @instance = Qif::Reader.new(open('spec/fixtures/3_records_separator.qif'))
     @instance.size.should == 3
