@@ -129,7 +129,7 @@ module Qif
         headers << line.strip if line =~ /^!/
       end until line !~ /^!/
 
-      @header = headers.shift
+      @header = headers.shift || "!Type:Bank" 
       @options = headers.map{|h| h.split(':') }.last
       
       unless line =~ /^\^/
@@ -153,7 +153,7 @@ module Qif
       record = {}
       begin
         line = @data.readline
-        key = line[0,1]
+        key = line[0,1].upcase
         record[key] = record.key?(key) ? record[key] + "\n" + line[1..-1].strip : line[1..-1].strip
 
         record[key].sub!(',','') if %w(T U $).include? key
